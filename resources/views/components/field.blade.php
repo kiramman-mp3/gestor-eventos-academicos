@@ -16,11 +16,11 @@
     <x-input-label :for="$id" :value="$label" :required="$required" />
 
     @if ($type === 'textarea')
-        <x-textarea :id="$id" :name="$name" :required="$required" {{ $attributes->except(['class', 'id']) }}>{{ $current }}</x-textarea>
+        <x-textarea :id="$id" :name="$name" :required="$required" {{ $attributes->except(['class', 'id'])->merge(['placeholder' => $placeholder]) }}>{{ $current }}</x-textarea>
     @elseif ($type === 'select')
         <x-select :id="$id" :name="$name" :required="$required" :options="$options" :selected="$current" :placeholder="$placeholder" {{ $attributes->except(['class', 'id']) }}>{{ $slot }}</x-select>
     @else
-        <x-text-input :id="$id" :name="$name" :type="$type" :required="$required" :value="$current" {{ $attributes->except(['class', 'id']) }} />
+        <x-text-input :id="$id" :name="$name" :type="$type" :required="$required" :value="$current" {{ $attributes->except(['class', 'id'])->merge(['placeholder' => $placeholder]) }} />
     @endif
 
     @if ($help)

@@ -19,6 +19,9 @@
     --color-marino-700: #22336b;
     --color-marino-800: #1b2a53;
     --color-marino-900: #121c38;
+
+    /* Texto principal del sitio legado (#2C3E50) */
+    --color-tinta: #2c3e50;
 }
 
 @layer components {
@@ -40,6 +43,30 @@
 
     .table-base td {
         @apply px-4 py-3 align-middle text-zinc-700;
+    }
+
+    /* Panel de contenido del administrador legado: tarjeta con borde rojo a la izquierda */
+    .panel {
+        @apply rounded-2xl border-l-4 border-uta-600 bg-white p-6 shadow-[0_6px_16px_rgba(0,0,0,0.08)];
+    }
+
+    /* Tarjeta de estadística en degradado rojo institucional */
+    .stat-card {
+        @apply rounded-2xl bg-gradient-to-br from-uta-600 to-uta-700 p-6 text-center text-white shadow-md transition hover:-translate-y-1 hover:shadow-lg;
+    }
+
+    /* Imagen con ícono de lápiz al pasar el cursor (editor del sitio legado) */
+    .imagen-editable {
+        @apply relative flex h-36 w-60 shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-xl border-2 border-dashed border-zinc-300 bg-zinc-50 transition hover:border-uta-600;
+    }
+
+    .imagen-editable__icono {
+        @apply absolute inset-0 flex items-center justify-center bg-black/0 text-white opacity-0 transition;
+    }
+
+    .imagen-editable:hover .imagen-editable__icono,
+    .imagen-editable:focus-within .imagen-editable__icono {
+        @apply bg-black/40 opacity-100;
     }
 }
 

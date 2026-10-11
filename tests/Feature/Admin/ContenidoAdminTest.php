@@ -70,7 +70,7 @@ class ContenidoAdminTest extends TestCase
     public function test_configuracion_se_guarda_y_se_muestra_en_el_pie(): void
     {
         $this->actingAs($this->admin)->put(route('admin.configuracion.update'), [
-            'nombre_institucion' => 'FISEI UTA',
+            'grupo' => 'contacto',
             'email_contacto' => 'contacto@uta.edu.ec',
             'telefono_contacto' => '032851894',
         ])->assertSessionHasNoErrors();
@@ -82,6 +82,6 @@ class ContenidoAdminTest extends TestCase
     public function test_estudiantes_no_editan_el_sitio(): void
     {
         $this->actingAs(User::factory()->create())->post(route('admin.contenidos.store'), ['tipo' => 'resena'])->assertForbidden();
-        $this->actingAs(User::factory()->create())->put(route('admin.configuracion.update'), ['nombre_institucion' => 'X'])->assertForbidden();
+        $this->actingAs(User::factory()->create())->put(route('admin.configuracion.update'), ['grupo' => 'identidad', 'nombre_institucion' => 'X'])->assertForbidden();
     }
 }
