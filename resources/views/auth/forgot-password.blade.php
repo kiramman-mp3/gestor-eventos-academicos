@@ -1,5 +1,5 @@
 <x-guest-layout title="Recuperar contraseña">
-    <h1 class="text-2xl font-bold text-zinc-900">Recuperar contraseña</h1>
+    <h1 class="text-2xl font-bold text-uta-600">Recuperar contraseña</h1>
     <p class="mt-1 text-sm text-zinc-500">Ingresa tu correo y te enviaremos un enlace para crear una nueva contraseña.</p>
 
     <form method="POST" action="{{ route('password.email') }}" class="mt-6 space-y-4">

@@ -1,5 +1,5 @@
 <x-guest-layout title="Iniciar sesión">
-    <h1 class="text-2xl font-bold text-zinc-900">Iniciar sesión</h1>
+    <h1 class="text-2xl font-bold text-uta-600">Iniciar sesión</h1>
     <p class="mt-1 text-sm text-zinc-500">Accede con tu correo registrado.</p>
 
     <form method="POST" action="{{ route('login') }}" class="mt-6 space-y-4">

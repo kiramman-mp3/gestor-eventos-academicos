@@ -1,7 +1,7 @@
 @php($dominio = '@'.\App\Enums\TipoUsuario::DOMINIO_INSTITUCIONAL)
 
 <x-guest-layout title="Registro">
-    <h1 class="text-2xl font-bold text-zinc-900">Crear cuenta</h1>
+    <h1 class="text-2xl font-bold text-uta-600">Crear cuenta</h1>
     <p class="mt-1 text-sm text-zinc-500">
         Si usas tu correo <strong>{{ $dominio }}</strong> selecciona tu carrera para ver los eventos dirigidos a ella.
     </p>
