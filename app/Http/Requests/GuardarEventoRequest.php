@@ -64,9 +64,9 @@ class GuardarEventoRequest extends FormRequest
             'categorias.*' => ['integer', 'distinct', Rule::exists('categorias', 'id')],
 
             'requiere_nota' => ['boolean'],
-            'nota_minima' => ['nullable', 'required_if:requiere_nota,true', 'numeric', 'between:0,10'],
+            'nota_minima' => ['nullable', 'numeric', 'between:0,10'],
             'requiere_asistencia' => ['boolean'],
-            'asistencia_minima' => ['nullable', 'required_if:requiere_asistencia,true', 'numeric', 'between:0,100'],
+            'asistencia_minima' => ['nullable', 'numeric', 'between:0,100'],
 
             'imagen' => ['nullable', 'image', 'mimes:'.implode(',', config('fisei.uploads.imagen_mimes')), 'max:'.config('fisei.uploads.imagen_max_kb')],
 
@@ -107,8 +107,13 @@ class GuardarEventoRequest extends FormRequest
     {
         $datos = $this->safe()->except(['categorias', 'requisitos', 'imagen']);
 
-        $datos['nota_minima'] = $datos['requiere_nota'] ? $datos['nota_minima'] : null;
-        $datos['asistencia_minima'] = $datos['requiere_asistencia'] ? $datos['asistencia_minima'] : null;
+        $datos['nota_minima'] = $datos['requiere_nota']
+            ? ($datos['nota_minima'] !== null && $datos['nota_minima'] !== '' ? $datos['nota_minima'] : config('fisei.nota_minima_defecto', 7.0))
+            : null;
+
+        $datos['asistencia_minima'] = $datos['requiere_asistencia']
+            ? ($datos['asistencia_minima'] !== null && $datos['asistencia_minima'] !== '' ? $datos['asistencia_minima'] : config('fisei.asistencia_minima_defecto', 70.0))
+            : null;
 
         return $datos;
     }

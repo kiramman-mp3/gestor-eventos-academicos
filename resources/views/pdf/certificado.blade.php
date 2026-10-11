@@ -58,7 +58,7 @@
 
     <div class="pie">
         <span class="codigo">{{ $inscripcion->codigo_certificado }}</span>
-        &nbsp; Emitido el {{ $inscripcion->certificado_emitido_at->isoFormat('D [de] MMMM [de] YYYY') }} ·
+        &nbsp; Emitido el {{ ($inscripcion->certificado_emitido_at ?? now())->isoFormat('D [de] MMMM [de] YYYY') }} ·
         Verifique su autenticidad en {{ $urlVerificacion }}
     </div>
 </body>

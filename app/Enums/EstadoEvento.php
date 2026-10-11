@@ -41,4 +41,42 @@ enum EstadoEvento: string
             self::Cancelado => 'rose',
         };
     }
+
+    /**
+     * Valida si es admisible transicionar hacia el nuevo estado.
+     */
+    public function puedeTransicionarA(self $nuevo): bool
+    {
+        if ($this === $nuevo) {
+            return true;
+        }
+
+        return array_key_exists($nuevo->value, $this->transicionesValidas());
+    }
+
+    /**
+     * Transiciones disponibles desde este estado: [estado_destino_value => etiqueta_accion]
+     *
+     * @return array<string, string>
+     */
+    public function transicionesValidas(): array
+    {
+        return match ($this) {
+            self::Borrador => [
+                self::Abierto->value => 'Publicar',
+                self::Cancelado->value => 'Cancelar',
+            ],
+            self::Abierto => [
+                self::EnEjecucion->value => 'Marcar en ejecución',
+                self::Finalizado->value => 'Finalizar evento',
+                self::Borrador->value => 'Volver a borrador',
+                self::Cancelado->value => 'Cancelar',
+            ],
+            self::EnEjecucion => [
+                self::Finalizado->value => 'Finalizar evento',
+                self::Cancelado->value => 'Cancelar',
+            ],
+            self::Finalizado, self::Cancelado => [],
+        };
+    }
 }
