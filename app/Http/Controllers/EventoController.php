@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Configuracion;
 use App\Models\Evento;
 use App\Models\TipoEvento;
 use Illuminate\Http\Request;
@@ -26,7 +27,7 @@ class EventoController extends Controller
             ->when($filtros['tipo'] ?? null, fn ($q, $tipo) => $q->where('tipo_evento_id', $tipo))
             ->orderByRaw('fecha_inicio < ? asc', [now()->toDateString()])
             ->orderBy('fecha_inicio')
-            ->paginate(9)
+            ->paginate(Configuracion::entero('eventos_por_pagina'))
             ->withQueryString();
 
         return view('eventos.index', [

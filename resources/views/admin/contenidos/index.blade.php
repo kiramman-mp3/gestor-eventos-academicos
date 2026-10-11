@@ -8,8 +8,8 @@
         <div class="mb-6 flex flex-wrap gap-2">
             @foreach ($tipos as $tipo)
                 <button type="button" @click="pestana = '{{ $tipo->value }}'"
-                        :class="pestana === '{{ $tipo->value }}' ? 'bg-marino-800 text-white' : 'bg-white text-zinc-700 ring-1 ring-zinc-200'"
-                        class="rounded-full px-4 py-1.5 text-sm font-medium">
+                        :class="pestana === '{{ $tipo->value }}' ? 'bg-uta-600 text-white shadow' : 'bg-white text-tinta ring-1 ring-zinc-200 hover:text-uta-700'"
+                        class="rounded-full px-4 py-1.5 text-sm font-semibold transition">
                     {{ $tipo->label() }} <span class="opacity-70">({{ $contenidos->get($tipo->value)?->count() ?? 0 }})</span>
                 </button>
             @endforeach
@@ -19,7 +19,7 @@
             @php($items = $contenidos->get($tipo->value, collect()))
             <section x-show="pestana === '{{ $tipo->value }}'" x-cloak class="grid gap-6 lg:grid-cols-2">
                 @foreach ($items as $contenido)
-                    <form method="POST" action="{{ route('admin.contenidos.update', $contenido) }}" enctype="multipart/form-data" class="card space-y-3 p-5">
+                    <form method="POST" action="{{ route('admin.contenidos.update', $contenido) }}" enctype="multipart/form-data" class="panel space-y-3 p-5">
                         @csrf
                         @method('PUT')
                         @include('admin.contenidos._campos', ['tipo' => $tipo, 'contenido' => $contenido])
@@ -38,7 +38,7 @@
 
                 @if (! $tipo->esUnico() || $items->isEmpty())
                     <form method="POST" action="{{ route('admin.contenidos.store') }}" enctype="multipart/form-data"
-                          class="card space-y-3 border-dashed p-5">
+                          class="card space-y-3 border-2 border-dashed p-5">
                         @csrf
                         <input type="hidden" name="tipo" value="{{ $tipo->value }}">
                         <p class="font-semibold text-zinc-900">Agregar a «{{ $tipo->label() }}»</p>

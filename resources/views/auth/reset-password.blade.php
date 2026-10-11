@@ -1,5 +1,5 @@
 <x-guest-layout title="Nueva contraseña">
-    <h1 class="text-2xl font-bold text-zinc-900">Nueva contraseña</h1>
+    <h1 class="text-2xl font-bold text-uta-600">Nueva contraseña</h1>
 
     <form method="POST" action="{{ route('password.store') }}" class="mt-6 space-y-4">
         @csrf
