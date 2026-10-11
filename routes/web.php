@@ -88,6 +88,11 @@ Route::middleware(['auth', 'verified', 'role:administrador'])
         Route::patch('/usuarios/{usuario}/rol', [Admin\UsuarioController::class, 'cambiarRol'])->name('usuarios.rol');
         Route::patch('/usuarios/{usuario}/activo', [Admin\UsuarioController::class, 'alternarActivo'])->name('usuarios.activo');
 
+        Route::resource('categorias', Admin\CategoriaController::class)->only(['index', 'store', 'update', 'destroy']);
+        Route::resource('tipos-evento', Admin\TipoEventoController::class)
+            ->only(['index', 'store', 'update', 'destroy'])
+            ->parameters(['tipos-evento' => 'tipoEvento']);
+
         Route::get('/comprobantes', [Admin\ComprobanteController::class, 'index'])->name('comprobantes.index');
         Route::post('/comprobantes/{comprobante}/aprobar', [Admin\ComprobanteController::class, 'aprobar'])->name('comprobantes.aprobar');
         Route::post('/comprobantes/{comprobante}/rechazar', [Admin\ComprobanteController::class, 'rechazar'])->name('comprobantes.rechazar');
