@@ -1,0 +1,48 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../../app/Enums/*.php';
+
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+
+    /* Identidad UTA / FISEI */
+    --color-uta-50: #fdf3f4;
+    --color-uta-100: #fbe4e6;
+    --color-uta-200: #f5c6cb;
+    --color-uta-500: #c9404e;
+    --color-uta-600: #b02a37;
+    --color-uta-700: #8e1f2b;
+    --color-uta-800: #6f1922;
+    --color-marino-700: #22336b;
+    --color-marino-800: #1b2a53;
+    --color-marino-900: #121c38;
+}
+
+@layer components {
+    .form-input {
+        @apply block w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 shadow-sm placeholder:text-zinc-400 focus:border-uta-600 focus:ring-2 focus:ring-uta-200 focus:outline-none disabled:bg-zinc-100;
+    }
+
+    .card {
+        @apply rounded-xl border border-zinc-200 bg-white shadow-sm;
+    }
+
+    .table-base {
+        @apply min-w-full divide-y divide-zinc-200 text-sm;
+    }
+
+    .table-base th {
+        @apply bg-zinc-50 px-4 py-3 text-left text-xs font-semibold tracking-wide text-zinc-600 uppercase;
+    }
+
+    .table-base td {
+        @apply px-4 py-3 align-middle text-zinc-700;
+    }
+}
+
+[x-cloak] {
+    display: none !important;
+}
