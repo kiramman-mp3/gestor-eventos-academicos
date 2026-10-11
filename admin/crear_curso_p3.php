@@ -1,6 +1,7 @@
 <?php
 require_once '../session.php';
 require_once '../sql/conexion.php';
+require_once '../upload_seguro.php';
 
 if (!isLoggedIn() || getUserRole() !== 'administrador') {
     header('Location: ../login.php');
@@ -24,21 +25,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Procesar imagen si se cargó
-    if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
-        $tmp = $_FILES['imagen']['tmp_name'];
-        $nombreArchivo = basename($_FILES['imagen']['name']);
-        $ext = strtolower(pathinfo($nombreArchivo, PATHINFO_EXTENSION));
-        $permitidas = ['jpg', 'jpeg', 'png', 'webp'];
-
-        if (!in_array($ext, $permitidas)) {
-            $errores[] = "Formato de imagen no permitido. Solo JPG, PNG, WEBP.";
-        } else {
-            $destino = "../uploads/" . uniqid('evento_') . "." . $ext;
-            if (!move_uploaded_file($tmp, $destino)) {
-                $errores[] = "Error al subir la imagen.";
-            } else {
-                $ruta_imagen = $destino;
-            }
+    if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] !== UPLOAD_ERR_NO_FILE) {
+        try {
+            $ruta_imagen = "../uploads/" . guardarUploadSeguro($_FILES['imagen'], __DIR__ . '/../uploads', UPLOAD_IMAGENES);
+        } catch (UploadException $e) {
+            $errores[] = $e->getMessage();
         }
     }
 

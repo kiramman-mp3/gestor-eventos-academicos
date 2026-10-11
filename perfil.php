@@ -1,6 +1,7 @@
 <?php
 require_once 'session.php';
 include('sql/conexion.php');
+require_once 'upload_seguro.php';
 
 if (!isLoggedIn()) {
   header('Location: login.php');
@@ -28,10 +29,8 @@ $catStmt = $conexion->query("SELECT id, nombre FROM categorias_evento ORDER BY n
 $carrerasDisponibles = $catStmt->fetchAll(PDO::FETCH_ASSOC);
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $carrera = $usuario['tipo'] === 'institucional' && empty($usuario['carrera']) ? ($_POST['carrera'] ?? null) : $usuario['carrera'];
-  $correo = $usuario['correo'];
-  $uploadDir = 'uploads/documentos/' . str_replace('@', '_', $correo) . '/';
-  if (!file_exists($uploadDir))
-    mkdir($uploadDir, 0777, true);
+  // Carpeta por ID de usuario (no por correo) con nombres de archivo aleatorios
+  $uploadDir = 'uploads/documentos/' . (int) $usuarioId . '/';
 
   $rutas = [
     'cedula_path' => $usuario['cedula_path'],
@@ -39,15 +38,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     'matricula_path' => $usuario['matricula_path']
   ];
 
+  $erroresSubida = [];
   foreach ($rutas as $key => &$ruta) {
     $campo = str_replace('_path', '', $key);
-    if (isset($_FILES[$campo]) && $_FILES[$campo]['error'] === 0) {
-      $file = $_FILES[$campo];
-      $destino = $uploadDir . $campo . '_' . basename($file['name']);
-      if (move_uploaded_file($file['tmp_name'], $destino)) {
-        $ruta = $destino;
+    if (isset($_FILES[$campo]) && $_FILES[$campo]['error'] !== UPLOAD_ERR_NO_FILE) {
+      try {
+        $nombre = guardarUploadSeguro($_FILES[$campo], __DIR__ . '/' . $uploadDir, UPLOAD_DOCUMENTOS);
+        eliminarUploadSeguro($ruta ? __DIR__ . '/' . $ruta : null, __DIR__ . '/uploads/documentos');
+        $ruta = $uploadDir . $nombre;
+      } catch (UploadException $e) {
+        $erroresSubida[] = ucfirst($campo) . ': ' . $e->getMessage();
       }
     }
+  }
+  unset($ruta);
+
+  if ($erroresSubida) {
+    $_SESSION['perfil_errores'] = $erroresSubida;
   }
 
   $update = $conexion->prepare("
@@ -114,6 +121,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <p><strong>Fecha de nacimiento:</strong> <?= htmlspecialchars($usuario['fecha_nacimiento']) ?></p>
       </div>
 
+      <?php foreach ($_SESSION['perfil_errores'] ?? [] as $errorSubida): ?>
+        <p style="color: red;"><?= e($errorSubida) ?></p>
+      <?php endforeach; unset($_SESSION['perfil_errores']); ?>
+
       <form method="POST" enctype="multipart/form-data" style="margin-top: 2rem;">
         <p>
           <strong><i class="fas fa-graduation-cap"></i> Carrera:</strong>
@@ -148,9 +159,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 onchange="previewPDF(this, '<?= $previewId ?>')">
               <?php if (!empty($path)): ?>
                 <?php if (preg_match('/\.(jpg|jpeg|png|gif)$/i', $path)): ?>
-                  <img src="<?= $path ?>" class="thumbnail">
+                  <img src="<?= e($path) ?>" class="thumbnail">
                 <?php elseif (preg_match('/\.pdf$/i', $path)): ?>
-                  <embed src="<?= $path ?>" type="application/pdf" width="50%" height="400px" class="thumbnail">
+                  <embed src="<?= e($path) ?>" type="application/pdf" width="50%" height="400px" class="thumbnail">
                 <?php else: ?>
                   <p style="color: red;">Archivo no soportado.</p>
                 <?php endif; ?>

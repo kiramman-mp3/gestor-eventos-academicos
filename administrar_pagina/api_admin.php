@@ -1,50 +1,39 @@
 <?php
+require_once '../session.php';
+
+requireAdmin();
 include '../sql/conexion.php';
+require_once '../upload_seguro.php';
 $conn = (new Conexion())->conectar();
 
+const DIR_LANDING = __DIR__ . '/../uploads/landing';
+
 function subirImagen($archivo, $tipoImagen, $imgActual = null) {
-    if ($tipoImagen === 'logo') {
-        $dirServidor = realpath(__DIR__ . '/../uploads/') . DIRECTORY_SEPARATOR;
-        $nombreArchivo = 'logo.png';
-        $rutaDestinoServidor = $dirServidor . $nombreArchivo;
-
-        // Validar que sea PNG
-        $extension = pathinfo($archivo['name'], PATHINFO_EXTENSION);
-        if (strtolower($extension) !== 'png') {
-            return false; // Indicar error o no procesar si no es PNG
-        }
-
-        // Eliminar logo anterior si existe
-        if (file_exists($rutaDestinoServidor)) {
-            unlink($rutaDestinoServidor);
-        }
-
-        if (move_uploaded_file($archivo['tmp_name'], $rutaDestinoServidor)) {
+    try {
+        if ($tipoImagen === 'logo') {
+            // El logo se valida como PNG real y luego reemplaza a uploads/logo.png
+            $dirUploads = __DIR__ . '/../uploads';
+            $temporal = guardarUploadSeguro($archivo, $dirUploads, ['png']);
+            if (!rename($dirUploads . '/' . $temporal, $dirUploads . '/logo.png')) {
+                unlink($dirUploads . '/' . $temporal);
+                return false;
+            }
             return 'uploads/logo.png';
         }
-    } else {
-        $dirServidor = realpath(__DIR__ . '/../uploads/landing/') . DIRECTORY_SEPARATOR;
-        if (!is_dir($dirServidor)) mkdir($dirServidor, 0777, true);
 
-        $nombreArchivo = uniqid() . '_' . basename($archivo['name']);
-        $rutaDestinoServidor = $dirServidor . $nombreArchivo;
-
-        if (move_uploaded_file($archivo['tmp_name'], $rutaDestinoServidor)) {
-            if ($imgActual) {
-                $rutaImagenAnteriorServidor = realpath(__DIR__ . '/../' . $imgActual);
-                if ($rutaImagenAnteriorServidor && file_exists($rutaImagenAnteriorServidor)) {
-                    unlink($rutaImagenAnteriorServidor);
-                }
-            }
-            return 'uploads/landing/' . $nombreArchivo;
-        }
+        $nombreArchivo = guardarUploadSeguro($archivo, DIR_LANDING, UPLOAD_IMAGENES);
+        // Solo se borra la imagen anterior si está dentro de uploads/landing
+        eliminarUploadSeguro($imgActual ? __DIR__ . '/../' . $imgActual : null, DIR_LANDING);
+        return 'uploads/landing/' . $nombreArchivo;
+    } catch (UploadException $e) {
+        return $tipoImagen === 'logo' ? false : $imgActual;
     }
-    return $imgActual;
 }
 
-// ELIMINAR
-if (isset($_GET['delete'])) {
-    $id = $_GET['delete'];
+// ELIMINAR (solo por POST)
+if (isset($_REQUEST['delete'])) {
+    requirePost();
+    $id = $_POST['delete'];
     $stmt = $conn->prepare("SELECT tipo, contenido FROM info_fisei WHERE id = ?");
     $stmt->execute([$id]);
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -52,9 +41,7 @@ if (isset($_GET['delete'])) {
     if ($row) {
         if (in_array($row['tipo'], ['carrusel', 'nosotros', 'autoridad', 'resena'])) {
             $json = json_decode($row['contenido'], true);
-            if (isset($json['img']) && file_exists('../' . $json['img'])) {
-                unlink('../' . $json['img']);
-            }
+            eliminarUploadSeguro(isset($json['img']) ? __DIR__ . '/../' . $json['img'] : null, DIR_LANDING);
         }
         $stmt = $conn->prepare("DELETE FROM info_fisei WHERE id = ?");
         $stmt->execute([$id]);

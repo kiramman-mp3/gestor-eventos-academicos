@@ -1,7 +1,11 @@
 <?php
 require_once '../session.php';
 
+requireLogin();
+requirePost();
+
 include_once '../sql/conexion.php';
+require_once '../upload_seguro.php';
 
 $cris = new Conexion();
 $conn = $cris->conectar();
@@ -12,22 +16,19 @@ $tipo = $_POST['tipo'] ?? '';
 $descripcion = $_POST['descripcion'] ?? '';
 $justificacion = $_POST['justificacion'] ?? '';
 $contexto = $_POST['contexto'] ?? '';
-$uid = $_POST['uid'] ?? '';
-$uname = $_POST['uname'] ?? '';
-$uemail = $_POST['uemail'] ?? '';
-$urol = $_POST['urol'] ?? '';
+// Los datos del solicitante salen de la sesión, no del formulario (evita suplantación)
+$uid = (string) getUserId();
+$uname = trim(getUserName() . ' ' . getUserLastname());
+$uemail = getUserEmail() ?? '';
+$urol = getUserRole() ?? '';
 
 $imagenRuta = "";
-if (isset($_FILES['captura']) && $_FILES['captura']['error'] === UPLOAD_ERR_OK) {
-    $nombreArchivo = basename($_FILES["captura"]["name"]);
-    $directorioDestino = "../uploads/";
-    if (!is_dir($directorioDestino)) {
-        mkdir($directorioDestino, 0755, true);
-    }
-    $rutaFinal = $directorioDestino . time() . "_" . $nombreArchivo;
-
-    if (move_uploaded_file($_FILES["captura"]["tmp_name"], $rutaFinal)) {
-        $imagenRuta = $rutaFinal;
+if (isset($_FILES['captura']) && $_FILES['captura']['error'] !== UPLOAD_ERR_NO_FILE) {
+    $directorioDestino = "../uploads/solicitudes/";
+    try {
+        $imagenRuta = $directorioDestino . guardarUploadSeguro($_FILES['captura'], __DIR__ . '/' . $directorioDestino, UPLOAD_IMAGENES);
+    } catch (UploadException $e) {
+        exit(e($e->getMessage()));
     }
 }
 
