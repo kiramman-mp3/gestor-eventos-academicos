@@ -5,9 +5,7 @@ require_once '../session.php';
 require '../sql/conexion.php';
 require '../libs/fpdf/fpdf.php';
 
-if (!isLoggedIn()) {
-    exit("Acceso no autorizado");
-}
+requireAdmin();
 
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
     exit("ID de evento no válido");

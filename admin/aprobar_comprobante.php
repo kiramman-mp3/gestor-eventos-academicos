@@ -1,5 +1,8 @@
 <?php
 require_once '../session.php';
+
+requireAdmin();
+requirePost();
 include('../sql/conexion.php');
 
 

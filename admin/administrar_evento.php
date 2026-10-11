@@ -2,10 +2,7 @@
 require_once '../session.php';
 include('../sql/conexion.php');
 
-if (!isLoggedIn()) {
-    header('Location: login.php');
-    exit;
-}
+requireAdmin();
 
 $nombre = getUserName();
 $apellido = getUserLastname();

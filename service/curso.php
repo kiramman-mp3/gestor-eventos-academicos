@@ -1,14 +1,29 @@
 <?php
 require_once '../session.php';
 require_once '../sql/conexion.php';
+require_once '../upload_seguro.php';
 header('Content-Type: application/json');
 
 $conn = (new Conexion())->conectar();
 $action = $_GET['action'] ?? '';
 $UPLOAD_DIR = '../uploads/cursos_imagenes/';
 
-if (!is_dir($UPLOAD_DIR)) {
-    mkdir($UPLOAD_DIR, 0777, true);
+// Solo 'listar' y 'obtener' son públicos; crear/editar/eliminar requieren administrador
+if (!in_array($action, ['listar', 'obtener'], true)) {
+    requireAdmin();
+}
+
+// Guarda la imagen del curso validada; devuelve la ruta relativa o null si no se envió
+function subirImagenCurso($dir) {
+    if (!isset($_FILES['imagen']) || $_FILES['imagen']['error'] === UPLOAD_ERR_NO_FILE) {
+        return null;
+    }
+    try {
+        return $dir . guardarUploadSeguro($_FILES['imagen'], __DIR__ . '/' . $dir, UPLOAD_IMAGENES);
+    } catch (UploadException $e) {
+        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+        exit;
+    }
 }
 
 // ========== LISTAR ==========
@@ -56,14 +71,7 @@ if ($action === 'obtener' && isset($_GET['id'])) {
 // ========== CREAR ==========
 if ($action === 'crear' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
-        $rutaImagen = '';
-        if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
-            $nombreArchivo = uniqid() . '_' . basename($_FILES['imagen']['name']);
-            $rutaDestino = $UPLOAD_DIR . $nombreArchivo;
-            if (move_uploaded_file($_FILES['imagen']['tmp_name'], $rutaDestino)) {
-                $rutaImagen = $rutaDestino;
-            }
-        }
+        $rutaImagen = subirImagenCurso($UPLOAD_DIR) ?? '';
 
         // Validar campos requeridos
         $campos = ['nombre_evento', 'tipo_evento_id', 'categoria_id', 'ponentes', 'fecha_inicio', 'fecha_fin', 'fecha_inicio_inscripciones', 'fecha_fin_inscripciones', 'horas', 'cupos', 'estado'];
@@ -159,15 +167,7 @@ if ($action === 'editar' && $_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        $rutaImagen = $_POST['ruta_imagen_actual'] ?? '';
-
-        if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
-            $nombreArchivo = uniqid() . '_' . basename($_FILES['imagen']['name']);
-            $rutaDestino = $UPLOAD_DIR . $nombreArchivo;
-            if (move_uploaded_file($_FILES['imagen']['tmp_name'], $rutaDestino)) {
-                $rutaImagen = $rutaDestino;
-            }
-        }
+        $rutaImagen = subirImagenCurso($UPLOAD_DIR) ?? ($_POST['ruta_imagen_actual'] ?? '');
 
         $sql = "UPDATE eventos SET
             nombre_evento=?, tipo_evento_id=?, categoria_id=?, ponentes=?,

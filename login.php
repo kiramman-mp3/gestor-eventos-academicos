@@ -25,23 +25,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $query->execute([':correo' => $correo]);
     $user = $query->fetch(PDO::FETCH_ASSOC);
 
-    if (!$user['verificado']) {
-      echo "<script>
-    alert('Debes verificar tu cuenta antes de iniciar sesión. Revisa tu correo.');
-    window.location.href = 'verificar.php?correo=" . urlencode($correo) . "';
-  </script>";
-      exit;
-    }
-
-
+    // Primero la contraseña: el estado de verificación solo se revela a quien conoce la clave
     if ($user && password_verify($password, $user['password'])) {
-      $_SESSION['usuario_id'] = $user['id'];
-      $_SESSION['email'] = $user['correo'];
-      $_SESSION['nombre'] = $user['nombre'];
-      $_SESSION['apellido'] = $user['apellido'];
-      $_SESSION['rol'] = $user['rol'];
-      $_SESSION['carrera'] = $user['carrera'] ?? null;
-      
+      if (!$user['verificado']) {
+        header('Location: verificar.php?correo=' . urlencode($correo));
+        exit;
+      }
+
+      loginUser($user);
+
       // Redirigir según el rol del usuario
       if ($user['rol'] === 'administrador') {
         header("Location: admin/panel_admin.php");
@@ -53,7 +45,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $error = "Correo o contraseña incorrectos";
     }
   } catch (PDOException $e) {
-    $error = "Error al conectar a la base de datos: " . $e->getMessage();
+    error_log('login.php: ' . $e->getMessage());
+    $error = "Error al conectar a la base de datos. Inténtalo más tarde.";
   }
 }
 ?>

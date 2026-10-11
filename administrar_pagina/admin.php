@@ -105,8 +105,8 @@ $currentLogo = file_exists($logoPath) ? $logoPath : '';
                 <input type="text" name="titulo" value="<?= $c['titulo'] ?>" required>
                 <textarea name="descripcion" required><?= $c['descripcion'] ?></textarea>
                 <button type="submit">Actualizar</button>
-                <a href="api_admin.php?delete=<?= $c['id'] ?>"
-                  onclick="localStorage.setItem('toastMsg','eliminado')">Eliminar</a>
+                <button type="submit" name="delete" value="<?= (int) $c['id'] ?>" formnovalidate class="btn-eliminar"
+                  onclick="if (!confirm('¿Eliminar este elemento?')) return false; localStorage.setItem('toastMsg','eliminado')">Eliminar</button>
               </div>
             </form>
           <?php endforeach; ?>
@@ -168,8 +168,8 @@ $currentLogo = file_exists($logoPath) ? $logoPath : '';
                 <input type="text" name="nombre" value="<?= $a['nombre'] ?>" required>
                 <input type="text" name="cargo" value="<?= $a['cargo'] ?>" required>
                 <button type="submit">Actualizar</button>
-                <a href="api_admin.php?delete=<?= $a['id'] ?>"
-                  onclick="localStorage.setItem('toastMsg','eliminado')">Eliminar</a>
+                <button type="submit" name="delete" value="<?= (int) $a['id'] ?>" formnovalidate class="btn-eliminar"
+                  onclick="if (!confirm('¿Eliminar este elemento?')) return false; localStorage.setItem('toastMsg','eliminado')">Eliminar</button>
               </div>
             </form>
           <?php endforeach; ?>
@@ -209,8 +209,8 @@ $currentLogo = file_exists($logoPath) ? $logoPath : '';
                 <input type="text" name="rol" value="<?= $r['rol'] ?>" required>
                 <textarea name="texto" required><?= $r['texto'] ?></textarea>
                 <button type="submit">Actualizar</button>
-                <a href="api_admin.php?delete=<?= $r['id'] ?>"
-                  onclick="localStorage.setItem('toastMsg','eliminado')">Eliminar</a>
+                <button type="submit" name="delete" value="<?= (int) $r['id'] ?>" formnovalidate class="btn-eliminar"
+                  onclick="if (!confirm('¿Eliminar este elemento?')) return false; localStorage.setItem('toastMsg','eliminado')">Eliminar</button>
               </div>
             </form>
           <?php endforeach; ?>

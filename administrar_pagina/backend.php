@@ -1,5 +1,8 @@
 <?php
-include 'sql/conexion.php';
+require_once '../session.php';
+
+requireAdmin();
+include '../sql/conexion.php';
 $conn = (new Conexion())->conectar();
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {

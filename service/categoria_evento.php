@@ -15,6 +15,11 @@ header('Content-Type: application/json');
 
 $action = $_GET['action'] ?? '';
 
+// Solo 'listar' es público; crear/editar/eliminar requieren administrador
+if ($action !== 'listar') {
+    requireAdmin();
+}
+
 // --- Mejora 2: Inicializar la variable $response ---
 // Es crucial inicializar $response para asegurar que siempre tenga una estructura definida,
 // especialmente si ninguna de las condiciones de acción se cumple o hay un error.

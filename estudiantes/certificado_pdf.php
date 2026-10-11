@@ -38,7 +38,10 @@ if (!$data) {
 $nota_minima = $data['nota_minima'] ?? 7.0;
 $asistencia_minima = $data['asistencia_minima'] ?? 70.0;
 
-$cumple_requisitos = ($data['estado'] === 'Pagado');
+// El certificado solo se emite con el pago aprobado
+if ($data['estado'] !== 'Pagado') {
+    exit("El certificado solo está disponible cuando el pago ha sido aprobado.");
+}
 
 if ($data['requiere_nota'] && ($data['nota'] === null || $data['nota'] < $nota_minima)) {
     exit("No cumple el requisito de nota mínima ({$nota_minima}) para obtener el certificado.");

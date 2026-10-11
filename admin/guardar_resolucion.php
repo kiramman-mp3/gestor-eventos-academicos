@@ -1,4 +1,8 @@
 <?php
+require_once '../session.php';
+
+requireAdmin();
+requirePost();
 include_once '../sql/conexion.php';
 
 $cris = new Conexion();
