@@ -16,16 +16,14 @@
 <nav class="-mt-2 mb-8 overflow-x-auto border-b border-zinc-200" aria-label="Administración">
     <ul class="flex min-w-max gap-1">
         @foreach ($secciones as $ruta => [$etiqueta, $patron])
-            @if (Route::has($ruta))
-                <li>
-                    <a href="{{ route($ruta) }}"
-                       @class([
-                           'inline-block border-b-2 px-3 py-2 text-sm font-medium transition',
-                           'border-uta-600 text-uta-700' => request()->routeIs($patron),
-                           'border-transparent text-zinc-500 hover:border-zinc-300 hover:text-zinc-800' => ! request()->routeIs($patron),
-                       ])>{{ $etiqueta }}</a>
-                </li>
-            @endif
+            <li>
+                <a href="{{ route($ruta) }}"
+                   @class([
+                       'inline-block border-b-2 px-3 py-2 text-sm font-medium transition',
+                       'border-uta-600 text-uta-700' => request()->routeIs($patron),
+                       'border-transparent text-zinc-500 hover:border-zinc-300 hover:text-zinc-800' => ! request()->routeIs($patron),
+                   ])>{{ $etiqueta }}</a>
+            </li>
         @endforeach
     </ul>
 </nav>

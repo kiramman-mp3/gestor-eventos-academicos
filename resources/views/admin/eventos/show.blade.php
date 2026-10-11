@@ -18,12 +18,10 @@
         @if ($evento->esEditable())
             <x-button size="sm" variant="secondary" :href="route('admin.eventos.edit', $evento)">Editar</x-button>
         @endif
-        @if (Route::has('gestion.notas.edit') && ($evento->requiere_nota || $evento->requiere_asistencia))
+        @if ($evento->requiere_nota || $evento->requiere_asistencia)
             <x-button size="sm" variant="secondary" :href="route('gestion.notas.edit', $evento)">Notas y asistencia</x-button>
         @endif
-        @if (Route::has('admin.eventos.reporte'))
-            <x-button size="sm" variant="secondary" :href="route('admin.eventos.reporte', $evento)" target="_blank">Reporte PDF</x-button>
-        @endif
+        <x-button size="sm" variant="secondary" :href="route('admin.eventos.reporte', $evento)" target="_blank">Reporte PDF</x-button>
         @foreach ($transiciones as $destino => $etiqueta)
             <form method="POST" action="{{ route('admin.eventos.estado', $evento) }}"
                   @if ($destino === EstadoEvento::Cancelado->value) onsubmit="return confirm('¿Cancelar este evento?')" @endif>

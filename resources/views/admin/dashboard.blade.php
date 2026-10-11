@@ -20,15 +20,13 @@
             </div>
             <x-badge :color="$comprobantesPendientes ? 'amber' : 'emerald'" class="text-base">{{ $comprobantesPendientes }}</x-badge>
         </a>
-        @if (Route::has('admin.solicitudes.index'))
-            <a href="{{ route('admin.solicitudes.index') }}" class="card flex items-center justify-between p-5 transition hover:shadow-md">
-                <div>
-                    <p class="font-semibold text-zinc-900">Solicitudes de cambio sin resolver</p>
-                    <p class="text-sm text-zinc-500">Pedidos de mejora o corrección.</p>
-                </div>
-                <x-badge :color="$solicitudesSinResolver ? 'amber' : 'emerald'" class="text-base">{{ $solicitudesSinResolver }}</x-badge>
-            </a>
-        @endif
+        <a href="{{ route('admin.solicitudes.index', ['estado' => 'sin_resolver']) }}" class="card flex items-center justify-between p-5 transition hover:shadow-md">
+            <div>
+                <p class="font-semibold text-zinc-900">Solicitudes de cambio sin resolver</p>
+                <p class="text-sm text-zinc-500">Pedidos de mejora o corrección.</p>
+            </div>
+            <x-badge :color="$solicitudesSinResolver ? 'amber' : 'emerald'" class="text-base">{{ $solicitudesSinResolver }}</x-badge>
+        </a>
     </div>
 
     <section class="card mt-8 overflow-hidden">
@@ -43,11 +41,7 @@
                         @foreach ($proximos as $evento)
                             <tr>
                                 <td class="font-medium text-zinc-900">
-                                    @if (Route::has('admin.eventos.show'))
-                                        <a href="{{ route('admin.eventos.show', $evento) }}" class="hover:text-uta-700">{{ $evento->nombre }}</a>
-                                    @else
-                                        {{ $evento->nombre }}
-                                    @endif
+                                    <a href="{{ route('admin.eventos.show', $evento) }}" class="hover:text-uta-700">{{ $evento->nombre }}</a>
                                 </td>
                                 <td>{{ $evento->fecha_inicio->isoFormat('LL') }}</td>
                                 <td><x-badge :color="$evento->estado->color()">{{ $evento->estado->label() }}</x-badge></td>
