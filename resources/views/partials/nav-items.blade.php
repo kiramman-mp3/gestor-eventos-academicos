@@ -2,7 +2,9 @@
 <x-nav-link :href="route('eventos.index')" :active="request()->routeIs('eventos.*')">Eventos</x-nav-link>
 
 @auth
-    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">Mi panel</x-nav-link>
+    @if (auth()->user()->esEstudiante())
+        <x-nav-link :href="route('inscripciones.index')" :active="request()->routeIs('inscripciones.*')">Mis inscripciones</x-nav-link>
+    @endif
 
     <div x-data="{ menu: false }" class="relative" @click.outside="menu = false">
         <button type="button" @click="menu = !menu"

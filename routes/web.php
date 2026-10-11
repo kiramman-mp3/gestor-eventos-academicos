@@ -4,6 +4,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DocumentoController;
 use App\Http\Controllers\EventoController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\InscripcionController;
 use App\Http\Controllers\PerfilController;
 use Illuminate\Support\Facades\Route;
 
@@ -35,6 +36,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/documentos', [DocumentoController::class, 'store'])->name('documentos.store');
     Route::get('/documentos/{documento}', [DocumentoController::class, 'show'])->name('documentos.show');
     Route::delete('/documentos/{documento}', [DocumentoController::class, 'destroy'])->name('documentos.destroy');
+
+    // Comprobantes de pago (dueño o administrador, ver InscripcionPolicy)
+    Route::get('/comprobantes/{comprobante}', [InscripcionController::class, 'verComprobante'])->name('comprobantes.show');
+
+    Route::middleware('role:estudiante')->group(function () {
+        Route::get('/mis-inscripciones', [InscripcionController::class, 'index'])->name('inscripciones.index');
+        Route::post('/eventos/{evento}/inscripcion', [InscripcionController::class, 'store'])->name('inscripciones.store');
+        Route::post('/inscripciones/{inscripcion}/comprobante', [InscripcionController::class, 'subirComprobante'])->name('inscripciones.comprobante');
+    });
 });
 
 require __DIR__.'/auth.php';
