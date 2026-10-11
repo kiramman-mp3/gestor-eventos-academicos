@@ -2,6 +2,8 @@
 require_once '../sql/conexion.php';
 require_once '../session.php';
 
+requireAdmin();
+
 $cris = new Conexion();
 $conexion = $cris->conectar();
 
@@ -12,10 +14,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $cedula = $_POST['cedula'];
   $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
   $genero = $_POST['genero'];
-  $rol = $_POST['rol'];
+  $rol = $_POST['rol'] ?? '';
   $fecha_nacimiento = $_POST['anio'] . '-' . $_POST['mes'] . '-' . $_POST['dia'];
 
-  if (str_ends_with($correo, '@uta.edu.ec')) {
+  if (!in_array($rol, [ROL_ADMIN, ROL_ESTUDIANTE], true)) {
+    $error = "Rol inválido.";
+  } elseif (str_ends_with($correo, '@uta.edu.ec')) {
     $tipo = 'institucional';
   } elseif (preg_match('/@.+\..+/', $correo)) {
     $tipo = 'publico';

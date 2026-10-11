@@ -13,6 +13,11 @@ header('Content-Type: application/json');
 
 $action = $_GET['action'] ?? '';
 
+// Solo 'listar' es público; crear/editar/eliminar requieren administrador
+if ($action !== 'listar') {
+    requireAdmin();
+}
+
 // Initialize the response array for consistency
 $response = ['success' => false, 'mensaje' => 'Operación no reconocida o fallida.'];
 

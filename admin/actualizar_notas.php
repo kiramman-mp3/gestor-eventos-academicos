@@ -2,10 +2,7 @@
 require_once '../session.php';
 include('../sql/conexion.php');
 
-if (!isLoggedIn()) {
-    header('Location: ../login.php');
-    exit;
-}
+requireAdmin();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: ../index.php');
