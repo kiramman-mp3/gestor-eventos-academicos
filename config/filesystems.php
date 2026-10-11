@@ -30,14 +30,19 @@ return [
 
     'disks' => [
 
+        // Disco privado: cédulas, papeletas, matrículas y comprobantes de pago.
+        // Fuera de public/ y sin ruta automática: solo se descargan por controladores
+        // que verifican la política de acceso (DocumentoPolicy, InscripcionPolicy).
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app/private'),
-            'serve' => true,
+            'visibility' => 'private',
+            'serve' => false,
             'throw' => false,
             'report' => false,
         ],
 
+        // Disco público: únicamente banners de eventos e imágenes del sitio.
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
