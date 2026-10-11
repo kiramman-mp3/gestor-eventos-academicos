@@ -8,6 +8,7 @@ use App\Http\Controllers\EventoController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InscripcionController;
 use App\Http\Controllers\PerfilController;
+use App\Http\Controllers\SolicitudCambioController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -47,6 +48,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Comprobantes de pago (dueño o administrador, ver InscripcionPolicy)
     Route::get('/comprobantes/{comprobante}', [InscripcionController::class, 'verComprobante'])->name('comprobantes.show');
+
+    // Solicitudes de cambio (cualquier usuario autenticado)
+    Route::get('/solicitudes', [SolicitudCambioController::class, 'index'])->name('solicitudes.index');
+    Route::get('/solicitudes/nueva', [SolicitudCambioController::class, 'create'])->name('solicitudes.create');
+    Route::post('/solicitudes', [SolicitudCambioController::class, 'store'])->middleware('throttle:10,1')->name('solicitudes.store');
+    Route::get('/solicitudes/{solicitud}/captura', [SolicitudCambioController::class, 'captura'])->name('solicitudes.captura');
 
     Route::middleware('role:estudiante')->group(function () {
         Route::get('/mis-inscripciones', [InscripcionController::class, 'index'])->name('inscripciones.index');
@@ -96,6 +103,10 @@ Route::middleware(['auth', 'verified', 'role:administrador'])
         Route::resource('contenidos', Admin\ContenidoController::class)->only(['index', 'store', 'update', 'destroy']);
         Route::get('/configuracion', [Admin\ConfiguracionController::class, 'edit'])->name('configuracion.edit');
         Route::put('/configuracion', [Admin\ConfiguracionController::class, 'update'])->name('configuracion.update');
+
+        Route::get('/solicitudes', [Admin\SolicitudController::class, 'index'])->name('solicitudes.index');
+        Route::get('/solicitudes/{solicitud}', [Admin\SolicitudController::class, 'show'])->name('solicitudes.show');
+        Route::put('/solicitudes/{solicitud}/resolucion', [Admin\SolicitudController::class, 'resolver'])->name('solicitudes.resolver');
 
         Route::get('/comprobantes', [Admin\ComprobanteController::class, 'index'])->name('comprobantes.index');
         Route::post('/comprobantes/{comprobante}/aprobar', [Admin\ComprobanteController::class, 'aprobar'])->name('comprobantes.aprobar');

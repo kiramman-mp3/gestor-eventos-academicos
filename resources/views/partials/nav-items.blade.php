@@ -24,6 +24,7 @@
              class="z-20 mt-1 w-56 rounded-lg bg-white py-1 text-sm text-zinc-700 shadow-lg ring-1 ring-black/5 md:absolute md:right-0">
             <p class="border-b border-zinc-100 px-4 py-2 text-xs text-zinc-500">{{ auth()->user()->rol->label() }}</p>
             <a href="{{ route('perfil.edit') }}" class="block px-4 py-2 hover:bg-zinc-50">Mi perfil</a>
+            <a href="{{ route('solicitudes.index') }}" class="block px-4 py-2 hover:bg-zinc-50">Solicitudes de cambio</a>
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit" class="block w-full px-4 py-2 text-left hover:bg-zinc-50">Cerrar sesión</button>
