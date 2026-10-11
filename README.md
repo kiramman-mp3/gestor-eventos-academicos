@@ -1,50 +1,84 @@
-# Gestión de Cursos/Eventos Académicos - UTA FISEI
+# Eventos Académicos FISEI
 
-## Descripción
+Sistema web para gestionar cursos, congresos, webinars y talleres de la Facultad de Ingeniería en Sistemas,
+Electrónica e Industrial (FISEI) de la Universidad Técnica de Ambato: publicación de eventos, inscripciones con
+requisitos y control de cupos, pagos con comprobante, calificaciones y certificados PDF verificables.
 
-Este proyecto corresponde al segundo parcial de la asignatura **Manejo y Configuración de Software** de la carrera de Software en la **Universidad Técnica de Ambato**. Consiste en el desarrollo de una aplicación web/escritorio para la **gestión de eventos académicos**, como cursos, congresos, webinars y conferencias, organizada por la Facultad de Ingeniería en Sistemas, Electrónica e Industrial (FISEI).
+![Laravel](https://img.shields.io/badge/Laravel-13-FF2D20?logo=laravel&logoColor=white)
+![PHP](https://img.shields.io/badge/PHP-8.4-777BB4?logo=php&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss&logoColor=white)
+![Licencia](https://img.shields.io/badge/licencia-MIT-green)
 
-El sistema integra funcionalidades de administración de eventos, inscripción, control de pagos, generación de reportes y certificados, todo ello con **buenas prácticas de control de versiones y control de cambios**.
+## Funcionalidades
 
-## Objetivo
+- **Catálogo de eventos** con búsqueda y filtros; eventos públicos o dirigidos a carreras específicas.
+- **Inscripción** con verificación de requisitos (documentos del perfil y preguntas) y control de cupos sin
+  sobreventa.
+- **Pagos**: subida de comprobantes y aprobación o rechazo por parte del administrador; eventos gratuitos sin pago.
+- **Calificaciones**: nota y asistencia registradas por administradores o el docente asignado.
+- **Certificados PDF** con código de verificación público.
+- **Reportes PDF** por evento con pagos, notas y resultados.
+- **Administración**: eventos, usuarios y roles, carreras, tipos de evento, contenido de la página de inicio y
+  configuración general.
+- **Solicitudes de cambio** de los usuarios con resolución, prioridad y seguimiento.
+- **Migración** de los datos del sistema anterior con `php artisan legado:importar`.
 
-Reforzar los conocimientos adquiridos sobre el proceso de **gestión de la configuración del software**, desarrollando colaborativamente una aplicación mediante herramientas como **Git**, **GitHub** y **Jira Service Management**, aplicando control de versiones y cambios.
+Roles: **administrador**, **docente** y **estudiante**. Detalle en [docs/funcionalidades.md](docs/funcionalidades.md).
 
-## Funcionalidades Principales
+## Inicio rápido
 
-- CRUD de cursos y eventos académicos
-- Gestión de organizadores y participantes
-- Roles múltiples: administrador, participante, organizador, etc.
-- Inscripción a eventos con verificación de requisitos
-- Gestión de pagos (depósito/transferencia) con carga de comprobantes
-- Aprobación manual de comprobantes por parte de administradores
-- Generación de:
-  - Orden de pago
-  - Reporte de asistencia
-  - Reporte de notas (en caso de cursos)
-  - Certificados de participación o aprobación
+Requisitos: PHP 8.4+, Composer 2, Node.js 20+.
 
-## Reglas del Negocio
+```bash
+git clone https://github.com/kiramman-mp3/fisei-gestion-eventos-academicos2.0.git
+cd fisei-gestion-eventos-academicos2.0
 
-- Existen distintos tipos de eventos: cursos, congresos, webinars, etc.
-- Los eventos pueden ser gratuitos o pagados y estar dirigidos a ciertas carreras o al público en general.
-- Los cursos incluyen número de horas, nota de aprobación y categoría.
-- Todos los eventos registran asistencia, y los cursos adicionalmente registran una nota final.
-- El sistema debe permitir búsquedas avanzadas de eventos.
+composer install
+cp .env.example .env
+php artisan key:generate
+touch database/database.sqlite
+php artisan migrate --seed       # muestra la contraseña del administrador inicial
+php artisan storage:link
+npm install && npm run build
 
-## Flujo General del Sistema
+php artisan serve                # http://localhost:8000
+```
 
-1. **Visualización de eventos** con filtros avanzados.
-2. **Inscripción** del usuario a un evento (verificación de requisitos y perfil).
-3. **Generación de orden de pago** con opción de adjuntar comprobante.
-4. **Aprobación del pago** por parte del administrador.
-5. **Participación en el evento** y registro de asistencia/notas.
-6. **Generación de certificados** y reportes finales.
+¿PHP menor a 8.4 o prefieres MySQL? Consulta la [instalación con Docker](docs/instalacion.md#instalación-con-docker).
 
-## Herramientas Utilizadas
+## Pruebas
 
-- Lenguaje: php, html y css
-- Git & GitHub: control de versiones
-- IDEs: Visual Studio Code
-## Estructura del Repositorio
+```bash
+php artisan test
+vendor/bin/pint --test
+```
 
+## Documentación
+
+| | |
+|---|---|
+| [Instalación](docs/instalacion.md) | Requisitos, Docker, variables de entorno, producción |
+| [Arquitectura](docs/arquitectura.md) | Stack, estructura, modelo de datos, rutas |
+| [Reglas de negocio](docs/reglas-de-negocio.md) | Estados de eventos e inscripciones, pagos, certificados |
+| [Funcionalidades por rol](docs/funcionalidades.md) | Qué puede hacer cada usuario |
+| [Seguridad](docs/seguridad.md) | Autenticación, autorización y manejo de archivos |
+| [Migración del sistema anterior](docs/migracion-legado.md) | Comando `legado:importar` |
+| [Guía de desarrollo](docs/desarrollo.md) | Flujo Git, commits, pruebas, convenciones |
+
+## Contexto académico
+
+Proyecto de la asignatura **Manejo y Configuración de Software**, carrera de Software, Universidad Técnica de
+Ambato. Aplica gestión de la configuración del software: control de versiones con Git y GitHub, flujo de ramas
+`main` / `develop` / `feature/*`, Conventional Commits y control de cambios mediante solicitudes registradas en el
+propio sistema.
+
+La primera versión (PHP sin framework) se conserva en [`legacy/`](legacy) como referencia y fuente de la migración
+de datos.
+
+## Equipo
+
+Pablo Vayas · Alexis López · José Manzano · Johan Rodríguez · Alan Puruncajas
+
+## Licencia
+
+[MIT](LICENSE)
