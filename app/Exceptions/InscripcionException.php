@@ -33,6 +33,11 @@ class InscripcionException extends RuntimeException
         return new self('No quedan cupos disponibles para este evento.');
     }
 
+    public static function limiteAlcanzado(int $maximo): self
+    {
+        return new self("Alcanzaste el máximo de {$maximo} inscripciones activas permitidas por estudiante.");
+    }
+
     public static function requisitoPendiente(string $descripcion): self
     {
         return new self("Falta cumplir el requisito: {$descripcion}. Sube el documento desde tu perfil.");

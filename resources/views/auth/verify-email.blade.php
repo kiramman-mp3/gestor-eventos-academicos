@@ -1,5 +1,5 @@
 <x-guest-layout title="Verifica tu correo">
-    <h1 class="text-2xl font-bold text-zinc-900">Verifica tu correo</h1>
+    <h1 class="text-2xl font-bold text-uta-600">Verifica tu correo</h1>
     <p class="mt-3 text-sm text-zinc-600">
         Te enviamos un enlace de verificación a <strong>{{ auth()->user()->email }}</strong>.
         Ábrelo para activar tu cuenta y poder inscribirte en eventos.

@@ -13,15 +13,16 @@
     ];
 @endphp
 
-<nav class="-mt-2 mb-8 overflow-x-auto border-b border-zinc-200" aria-label="Administración">
+<nav class="-mt-2 mb-8 overflow-x-auto rounded-2xl bg-white p-2 shadow-[0_4px_12px_rgba(0,0,0,0.06)] ring-1 ring-zinc-100" aria-label="Administración">
     <ul class="flex min-w-max gap-1">
         @foreach ($secciones as $ruta => [$etiqueta, $patron])
             <li>
                 <a href="{{ route($ruta) }}"
+                   @if (request()->routeIs($patron)) aria-current="page" @endif
                    @class([
-                       'inline-block border-b-2 px-3 py-2 text-sm font-medium transition',
-                       'border-uta-600 text-uta-700' => request()->routeIs($patron),
-                       'border-transparent text-zinc-500 hover:border-zinc-300 hover:text-zinc-800' => ! request()->routeIs($patron),
+                       'inline-block rounded-lg px-3.5 py-2 text-sm font-semibold transition',
+                       'bg-uta-600 text-white shadow' => request()->routeIs($patron),
+                       'text-tinta hover:bg-uta-50 hover:text-uta-700' => ! request()->routeIs($patron),
                    ])>{{ $etiqueta }}</a>
             </li>
         @endforeach

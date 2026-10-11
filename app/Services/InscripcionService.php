@@ -3,10 +3,12 @@
 namespace App\Services;
 
 use App\Enums\EstadoComprobante;
+use App\Enums\EstadoEvento;
 use App\Enums\EstadoInscripcion;
 use App\Enums\TipoRequisito;
 use App\Exceptions\InscripcionException;
 use App\Models\Comprobante;
+use App\Models\Configuracion;
 use App\Models\Evento;
 use App\Models\Inscripcion;
 use App\Models\User;
@@ -59,6 +61,11 @@ class InscripcionService
                     throw InscripcionException::yaInscrito();
                 }
 
+                $maximo = Configuracion::entero('max_inscripciones_estudiante');
+                if ($maximo > 0 && $this->inscripcionesActivas($user) >= $maximo) {
+                    throw InscripcionException::limiteAlcanzado($maximo);
+                }
+
                 $ocupados = Inscripcion::query()
                     ->whereBelongsTo($bloqueado)
                     ->whereIn('estado', EstadoInscripcion::ocupanCupo())
@@ -86,6 +93,16 @@ class InscripcionService
         } catch (UniqueConstraintViolationException) {
             throw InscripcionException::yaInscrito();
         }
+    }
+
+    /** Inscripciones que ocupan cupo en eventos todavía abiertos o en ejecución. */
+    private function inscripcionesActivas(User $user): int
+    {
+        return Inscripcion::query()
+            ->whereBelongsTo($user)
+            ->whereIn('estado', EstadoInscripcion::ocupanCupo())
+            ->whereHas('evento', fn ($q) => $q->whereIn('estado', [EstadoEvento::Abierto, EstadoEvento::EnEjecucion]))
+            ->count();
     }
 
     /**

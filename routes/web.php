@@ -103,6 +103,8 @@ Route::middleware(['auth', 'verified', 'role:administrador'])
         Route::resource('contenidos', Admin\ContenidoController::class)->only(['index', 'store', 'update', 'destroy']);
         Route::get('/configuracion', [Admin\ConfiguracionController::class, 'edit'])->name('configuracion.edit');
         Route::put('/configuracion', [Admin\ConfiguracionController::class, 'update'])->name('configuracion.update');
+        Route::get('/configuracion/exportar', [Admin\ConfiguracionController::class, 'exportar'])->name('configuracion.exportar');
+        Route::post('/configuracion/limpiar-cache', [Admin\ConfiguracionController::class, 'limpiarCache'])->name('configuracion.limpiar-cache');
 
         Route::get('/solicitudes', [Admin\SolicitudController::class, 'index'])->name('solicitudes.index');
         Route::get('/solicitudes/{solicitud}', [Admin\SolicitudController::class, 'show'])->name('solicitudes.show');

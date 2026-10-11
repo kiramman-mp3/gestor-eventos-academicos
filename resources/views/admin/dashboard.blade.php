@@ -5,22 +5,22 @@
 
     <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         @foreach ($stats as $etiqueta => $valor)
-            <div class="card p-5">
-                <p class="text-sm text-zinc-500">{{ $etiqueta }}</p>
-                <p class="mt-1 text-3xl font-bold text-marino-800">{{ $valor }}</p>
+            <div class="stat-card">
+                <p class="text-4xl font-bold">{{ $valor }}</p>
+                <p class="mt-1 text-sm text-white/85">{{ $etiqueta }}</p>
             </div>
         @endforeach
     </div>
 
     <div class="mt-6 grid gap-4 md:grid-cols-2">
-        <a href="{{ route('admin.comprobantes.index') }}" class="card flex items-center justify-between p-5 transition hover:shadow-md">
+        <a href="{{ route('admin.comprobantes.index') }}" class="panel flex items-center justify-between transition hover:-translate-y-1">
             <div>
                 <p class="font-semibold text-zinc-900">Comprobantes por revisar</p>
                 <p class="text-sm text-zinc-500">Pagos que esperan aprobación.</p>
             </div>
             <x-badge :color="$comprobantesPendientes ? 'amber' : 'emerald'" class="text-base">{{ $comprobantesPendientes }}</x-badge>
         </a>
-        <a href="{{ route('admin.solicitudes.index', ['estado' => 'sin_resolver']) }}" class="card flex items-center justify-between p-5 transition hover:shadow-md">
+        <a href="{{ route('admin.solicitudes.index', ['estado' => 'sin_resolver']) }}" class="panel flex items-center justify-between transition hover:-translate-y-1">
             <div>
                 <p class="font-semibold text-zinc-900">Solicitudes de cambio sin resolver</p>
                 <p class="text-sm text-zinc-500">Pedidos de mejora o corrección.</p>
@@ -30,7 +30,7 @@
     </div>
 
     <section class="card mt-8 overflow-hidden">
-        <h2 class="border-b border-zinc-100 px-5 py-4 font-semibold text-zinc-900">Próximos eventos</h2>
+        <h2 class="border-b border-zinc-100 px-5 py-4 text-lg font-extrabold text-uta-700">Próximos eventos</h2>
         @if ($proximos->isEmpty())
             <p class="px-5 py-6 text-sm text-zinc-500">No hay eventos abiertos o en ejecución.</p>
         @else
