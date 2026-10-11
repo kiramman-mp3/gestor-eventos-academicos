@@ -12,6 +12,7 @@ class DashboardController extends Controller
     public function __invoke(Request $request): RedirectResponse
     {
         return match ($request->user()->rol) {
+            RolUsuario::Administrador => redirect()->route('admin.dashboard'),
             RolUsuario::Estudiante => redirect()->route('inscripciones.index'),
             default => redirect()->route('home'),
         };

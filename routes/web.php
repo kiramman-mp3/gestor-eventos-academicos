@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DocumentoController;
 use App\Http\Controllers\EventoController;
@@ -46,5 +47,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/inscripciones/{inscripcion}/comprobante', [InscripcionController::class, 'subirComprobante'])->name('inscripciones.comprobante');
     });
 });
+
+/*
+|--------------------------------------------------------------------------
+| Administración
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth', 'verified', 'role:administrador'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+        Route::get('/', Admin\DashboardController::class)->name('dashboard');
+
+        Route::get('/comprobantes', [Admin\ComprobanteController::class, 'index'])->name('comprobantes.index');
+        Route::post('/comprobantes/{comprobante}/aprobar', [Admin\ComprobanteController::class, 'aprobar'])->name('comprobantes.aprobar');
+        Route::post('/comprobantes/{comprobante}/rechazar', [Admin\ComprobanteController::class, 'rechazar'])->name('comprobantes.rechazar');
+    });
 
 require __DIR__.'/auth.php';
