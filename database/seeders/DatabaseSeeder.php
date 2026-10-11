@@ -3,10 +3,8 @@
 namespace Database\Seeders;
 
 use App\Enums\RolUsuario;
-use App\Enums\TipoContenido;
 use App\Models\Categoria;
 use App\Models\Configuracion;
-use App\Models\Contenido;
 use App\Models\TipoEvento;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -39,7 +37,7 @@ class DatabaseSeeder extends Seeder
         }
 
         $this->crearAdministrador();
-        $this->crearContenidoBase();
+        $this->call(ContenidoSeeder::class);
 
         Configuracion::guardar([
             'nombre_institucion' => 'Facultad de Ingeniería en Sistemas, Electrónica e Industrial',
@@ -74,15 +72,4 @@ class DatabaseSeeder extends Seeder
         }
     }
 
-    private function crearContenidoBase(): void
-    {
-        $base = [
-            TipoContenido::Mision->value => 'Formar profesionales líderes y competentes en ingeniería, con una sólida visión humanista, científica y tecnológica.',
-            TipoContenido::Vision->value => 'Ser reconocida a nivel nacional e internacional por la excelencia en la formación de profesionales en ingeniería con un enfoque integral.',
-        ];
-
-        foreach ($base as $tipo => $cuerpo) {
-            Contenido::query()->firstOrCreate(['tipo' => $tipo], ['cuerpo' => $cuerpo]);
-        }
-    }
 }

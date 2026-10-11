@@ -1,4 +1,5 @@
 <x-nav-link :href="route('home')" :active="request()->routeIs('home')">Inicio</x-nav-link>
+<x-nav-link :href="route('eventos.index')" :active="request()->routeIs('eventos.*')">Eventos</x-nav-link>
 
 @auth
     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">Mi panel</x-nav-link>
