@@ -64,6 +64,20 @@ return [
             ]) : [],
         ],
 
+        // Base de datos del sistema PHP anterior (solo lectura, para `php artisan legado:importar`)
+        'legado' => [
+            'driver' => 'mysql',
+            'host' => env('LEGADO_DB_HOST', '127.0.0.1'),
+            'port' => env('LEGADO_DB_PORT', '3306'),
+            'database' => env('LEGADO_DB_DATABASE', 'UTA'),
+            'username' => env('LEGADO_DB_USERNAME', 'root'),
+            'password' => env('LEGADO_DB_PASSWORD', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_general_ci',
+            'prefix' => '',
+            'strict' => false,
+        ],
+
         'mariadb' => [
             'driver' => 'mariadb',
             'url' => env('DB_URL'),
