@@ -59,6 +59,9 @@ Route::middleware(['auth', 'verified', 'role:administrador'])
     ->group(function () {
         Route::get('/', Admin\DashboardController::class)->name('dashboard');
 
+        Route::resource('eventos', Admin\EventoAdminController::class);
+        Route::patch('/eventos/{evento}/estado', [Admin\EventoAdminController::class, 'cambiarEstado'])->name('eventos.estado');
+
         Route::get('/comprobantes', [Admin\ComprobanteController::class, 'index'])->name('comprobantes.index');
         Route::post('/comprobantes/{comprobante}/aprobar', [Admin\ComprobanteController::class, 'aprobar'])->name('comprobantes.aprobar');
         Route::post('/comprobantes/{comprobante}/rechazar', [Admin\ComprobanteController::class, 'rechazar'])->name('comprobantes.rechazar');
