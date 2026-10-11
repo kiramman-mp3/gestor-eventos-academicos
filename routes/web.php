@@ -50,6 +50,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 /*
 |--------------------------------------------------------------------------
+| Calificaciones: administradores y docentes (EventoPolicy::calificar)
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth', 'verified', 'role:administrador,docente'])
+    ->prefix('gestion')
+    ->name('gestion.')
+    ->group(function () {
+        Route::get('/calificaciones', [Admin\NotaController::class, 'index'])->name('notas.index');
+        Route::get('/eventos/{evento}/notas', [Admin\NotaController::class, 'edit'])->name('notas.edit');
+        Route::put('/eventos/{evento}/notas', [Admin\NotaController::class, 'update'])->name('notas.update');
+    });
+
+/*
+|--------------------------------------------------------------------------
 | Administración
 |--------------------------------------------------------------------------
 */

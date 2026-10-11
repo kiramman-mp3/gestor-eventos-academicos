@@ -13,8 +13,8 @@ class DashboardController extends Controller
     {
         return match ($request->user()->rol) {
             RolUsuario::Administrador => redirect()->route('admin.dashboard'),
+            RolUsuario::Docente => redirect()->route('gestion.notas.index'),
             RolUsuario::Estudiante => redirect()->route('inscripciones.index'),
-            default => redirect()->route('home'),
         };
     }
 }

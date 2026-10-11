@@ -5,6 +5,9 @@
     @if (auth()->user()->esAdmin())
         <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.*')">Administración</x-nav-link>
     @endif
+    @if (auth()->user()->esDocente())
+        <x-nav-link :href="route('gestion.notas.index')" :active="request()->routeIs('gestion.*')">Calificaciones</x-nav-link>
+    @endif
     @if (auth()->user()->esEstudiante())
         <x-nav-link :href="route('inscripciones.index')" :active="request()->routeIs('inscripciones.*')">Mis inscripciones</x-nav-link>
     @endif

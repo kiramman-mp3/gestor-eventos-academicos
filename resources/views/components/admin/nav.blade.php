@@ -3,6 +3,7 @@
         'admin.dashboard' => ['Resumen', 'admin.dashboard'],
         'admin.eventos.index' => ['Eventos', 'admin.eventos.*'],
         'admin.comprobantes.index' => ['Comprobantes', 'admin.comprobantes.*'],
+        'gestion.notas.index' => ['Calificaciones', 'gestion.notas.*'],
         'admin.usuarios.index' => ['Usuarios', 'admin.usuarios.*'],
         'admin.categorias.index' => ['Carreras', 'admin.categorias.*'],
         'admin.tipos-evento.index' => ['Tipos de evento', 'admin.tipos-evento.*'],
