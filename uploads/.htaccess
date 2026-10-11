@@ -1,0 +1,37 @@
+# uploads/.htaccess — esta carpeta (y sus subcarpetas) solo sirve archivos estáticos.
+# Bloquea la ejecución de PHP/CGI/scripts para prevenir RCE por subida de archivos.
+# Requiere Apache 2.4 con AllowOverride All (por defecto en XAMPP).
+
+# Sin listado de directorios, CGI ni SSI
+Options -Indexes -ExecCGI -Includes
+
+# Ningún handler de script: todo se sirve como archivo plano
+RemoveHandler .php .phtml .php3 .php4 .php5 .php7 .php8 .phar .phps .pht .pl .py .cgi .sh .shtml .asp .aspx .jsp
+RemoveType .php .phtml .php3 .php4 .php5 .php7 .php8 .phar .phps .pht
+SetHandler default-handler
+
+# Apaga el intérprete si PHP corre como módulo de Apache
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php7.c>
+    php_flag engine off
+</IfModule>
+
+# Denegar todo por defecto...
+Require all denied
+
+# ...permitir solo tipos esperados...
+<FilesMatch "(?i)\.(jpe?g|png|webp|gif|pdf)$">
+    Require all granted
+</FilesMatch>
+
+# ...y volver a denegar si el nombre contiene cualquier extensión ejecutable (shell.php.jpg, x.phtml.png)
+<FilesMatch "(?i)(^\.|\.(php\d?|phtml|phar|phps|pht|cgi|pl|py|sh|shtml|asp|aspx|jsp|exe|bat|cmd|htaccess|htpasswd)(\.|$))">
+    Require all denied
+</FilesMatch>
+
+# Evita que el navegador interprete un archivo con un tipo distinto al declarado
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+</IfModule>
