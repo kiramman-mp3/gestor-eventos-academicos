@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Enums\EstadoEvento;
+use App\Enums\EstadoInscripcion;
 use App\Exceptions\InscripcionException;
 use App\Models\Evento;
 use Illuminate\Http\UploadedFile;
@@ -65,8 +66,17 @@ class EventoService
         return $evento;
     }
 
+    /** @throws InscripcionException */
     public function cambiarEstado(Evento $evento, EstadoEvento $estado): void
     {
+        if (! $evento->estado->puedeTransicionarA($estado)) {
+            throw new InscripcionException("No es posible cambiar el estado de «{$evento->estado->label()}» a «{$estado->label()}».");
+        }
+
+        if ($estado === EstadoEvento::Borrador && $evento->inscripciones()->whereIn('estado', EstadoInscripcion::ocupanCupo())->exists()) {
+            throw new InscripcionException('No se puede volver a borrador un evento con inscripciones activas.');
+        }
+
         $evento->estado = $estado;
         $evento->save();
     }

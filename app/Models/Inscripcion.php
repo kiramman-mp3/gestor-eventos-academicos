@@ -73,16 +73,26 @@ class Inscripcion extends Model
     {
         $evento = $this->evento;
 
-        return ! $evento->requiere_nota
-            || ($this->nota !== null && (float) $this->nota >= (float) ($evento->nota_minima ?? 7));
+        if (! $evento->requiere_nota) {
+            return true;
+        }
+
+        $minima = (float) ($evento->nota_minima ?? config('fisei.nota_minima_defecto', 7.0));
+
+        return $this->nota !== null && (float) $this->nota >= $minima;
     }
 
     public function cumpleAsistencia(): bool
     {
         $evento = $this->evento;
 
-        return ! $evento->requiere_asistencia
-            || ($this->asistencia !== null && (float) $this->asistencia >= (float) ($evento->asistencia_minima ?? 70));
+        if (! $evento->requiere_asistencia) {
+            return true;
+        }
+
+        $minima = (float) ($evento->asistencia_minima ?? config('fisei.asistencia_minima_defecto', 70.0));
+
+        return $this->asistencia !== null && (float) $this->asistencia >= $minima;
     }
 
     /** Pago aprobado y requisitos académicos cumplidos. La política agrega la comprobación de propiedad. */

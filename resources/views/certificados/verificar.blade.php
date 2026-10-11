@@ -9,7 +9,7 @@
                     <div><dt class="font-medium text-zinc-500">Participante</dt><dd class="text-zinc-900">{{ $inscripcion->user->nombre_completo }}</dd></div>
                     <div><dt class="font-medium text-zinc-500">Evento</dt><dd class="text-zinc-900">{{ $inscripcion->evento->nombre }}</dd></div>
                     <div><dt class="font-medium text-zinc-500">Duración</dt><dd class="text-zinc-900">{{ $inscripcion->evento->horas }} horas</dd></div>
-                    <div><dt class="font-medium text-zinc-500">Emitido</dt><dd class="text-zinc-900">{{ $inscripcion->certificado_emitido_at->isoFormat('LL') }}</dd></div>
+                    <div><dt class="font-medium text-zinc-500">Emitido</dt><dd class="text-zinc-900">{{ $inscripcion->certificado_emitido_at?->isoFormat('LL') ?? 'Fecha no registrada' }}</dd></div>
                 </dl>
             </div>
         @else
