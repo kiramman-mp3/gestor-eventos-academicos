@@ -134,19 +134,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           $error = "Usuario registrado pero error al enviar el correo de verificación.";
         }
 
-        $query = $conexion->prepare("SELECT * FROM estudiantes WHERE correo = :correo LIMIT 1");
-        $query->bindValue(':correo', $correo);
-        $query->execute();
-        $user = $query->fetch(PDO::FETCH_ASSOC);
-
-        if ($user) {
-          $_SESSION['usuario_id'] = $user['id'];
-          $_SESSION['nombre'] = $user['nombre'];
-          $_SESSION['apellido'] = $user['apellido'];
-          $_SESSION['email'] = $user['correo'];
-          $_SESSION['rol'] = $user['rol'];
-          $_SESSION['carrera'] = $user['carrera'] ?? null;
-          header("Location: ver_cursos.php");
+        // No se inicia sesión hasta verificar el correo
+        if (!isset($error)) {
+          header("Location: verificar.php?correo=" . urlencode($correo));
           exit;
         }
       } else {
