@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin;
+use App\Http\Controllers\CertificadoController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DocumentoController;
 use App\Http\Controllers\EventoController;
@@ -19,6 +20,9 @@ Route::view('/creditos', 'creditos')->name('creditos');
 
 Route::get('/eventos', [EventoController::class, 'index'])->name('eventos.index');
 Route::get('/eventos/{evento}', [EventoController::class, 'show'])->name('eventos.show');
+Route::get('/certificados/verificar/{codigo}', [CertificadoController::class, 'verificar'])
+    ->middleware('throttle:30,1')
+    ->name('certificados.verificar');
 
 /*
 |--------------------------------------------------------------------------
@@ -37,6 +41,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/documentos', [DocumentoController::class, 'store'])->name('documentos.store');
     Route::get('/documentos/{documento}', [DocumentoController::class, 'show'])->name('documentos.show');
     Route::delete('/documentos/{documento}', [DocumentoController::class, 'destroy'])->name('documentos.destroy');
+
+    // Certificados (CertificadoPolicy: dueño o admin, pago aprobado, requisitos cumplidos, evento finalizado)
+    Route::get('/inscripciones/{inscripcion}/certificado', [CertificadoController::class, 'descargar'])->name('certificados.descargar');
 
     // Comprobantes de pago (dueño o administrador, ver InscripcionPolicy)
     Route::get('/comprobantes/{comprobante}', [InscripcionController::class, 'verComprobante'])->name('comprobantes.show');

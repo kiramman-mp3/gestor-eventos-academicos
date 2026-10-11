@@ -53,6 +53,10 @@
                                 <x-input-error :messages="$errors->get('comprobante')" />
                             @endcan
 
+                            @can('descargar-certificado', $inscripcion)
+                                <x-button size="sm" variant="success" :href="route('certificados.descargar', $inscripcion)">Descargar certificado</x-button>
+                            @endcan
+
                             @if ($inscripcion->comprobanteVigente)
                                 <x-button size="sm" variant="secondary" :href="route('comprobantes.show', $inscripcion->comprobanteVigente)" target="_blank" rel="noopener">
                                     Ver comprobante
