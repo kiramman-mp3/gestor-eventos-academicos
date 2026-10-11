@@ -1,13 +1,10 @@
 @use('App\Enums\EstadoEvento')
 
 @php
-    // Acciones de estado disponibles según el estado actual: [estado destino => etiqueta]
-    $transiciones = match ($evento->estado) {
-        EstadoEvento::Borrador => [EstadoEvento::Abierto->value => 'Publicar', EstadoEvento::Cancelado->value => 'Cancelar'],
-        EstadoEvento::Abierto => [EstadoEvento::EnEjecucion->value => 'Marcar en ejecución', EstadoEvento::Borrador->value => 'Volver a borrador', EstadoEvento::Cancelado->value => 'Cancelar'],
-        EstadoEvento::EnEjecucion => [EstadoEvento::Finalizado->value => 'Finalizar evento'],
-        default => [],
-    };
+    $transiciones = $evento->estado->transicionesValidas();
+    if ($evento->inscripciones_count > 0) {
+        unset($transiciones[EstadoEvento::Borrador->value]);
+    }
 @endphp
 
 <x-app-layout :title="$evento->nombre">

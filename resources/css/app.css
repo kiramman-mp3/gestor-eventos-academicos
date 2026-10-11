@@ -5,9 +5,8 @@
 @source '../../app/Enums/*.php';
 
 @theme {
-    /* Tipografía del sitio legado */
-    --font-sans: 'Segoe UI', system-ui, -apple-system, Roboto, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji',
-        'Segoe UI Emoji';
+    /* Tipografía moderna de alta legibilidad con fallback institucional */
+    --font-sans: 'Instrument Sans', 'Segoe UI', system-ui, -apple-system, Roboto, 'Helvetica Neue', Arial, sans-serif;
 
     /* Identidad UTA / FISEI */
     --color-uta-50: #fdf3f4;
@@ -27,11 +26,11 @@
 
 @layer components {
     .form-input {
-        @apply block w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 shadow-sm placeholder:text-zinc-400 focus:border-uta-600 focus:ring-2 focus:ring-uta-200 focus:outline-none disabled:bg-zinc-100;
+        @apply block w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 shadow-sm placeholder:text-zinc-400 focus:border-uta-600 focus:ring-2 focus:ring-uta-200 focus:outline-none disabled:bg-zinc-100 transition-colors duration-150;
     }
 
     .card {
-        @apply rounded-xl border border-zinc-200 bg-white shadow-sm;
+        @apply rounded-xl border border-zinc-200/80 bg-white shadow-sm transition-all duration-200;
     }
 
     .table-base {

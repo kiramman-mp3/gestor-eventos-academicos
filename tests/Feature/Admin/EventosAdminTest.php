@@ -174,4 +174,28 @@ class EventosAdminTest extends TestCase
         $this->actingAs(User::factory()->create())->post(route('admin.eventos.store'), $this->datos())->assertForbidden();
         $this->assertDatabaseCount('eventos', 0);
     }
+
+    public function test_rechaza_transiciones_de_estado_invalidas(): void
+    {
+        $evento = Evento::factory()->create(['estado' => EstadoEvento::Finalizado]);
+
+        $this->actingAs($this->admin)->patch(route('admin.eventos.estado', $evento), ['estado' => 'abierto'])
+            ->assertSessionHas('error');
+
+        $this->assertSame(EstadoEvento::Finalizado, $evento->fresh()->estado);
+    }
+
+    public function test_aplica_valores_por_defecto_para_nota_y_asistencia_minimas(): void
+    {
+        $this->actingAs($this->admin)->post(route('admin.eventos.store'), $this->datos([
+            'requiere_nota' => '1',
+            'nota_minima' => null,
+            'requiere_asistencia' => '1',
+            'asistencia_minima' => null,
+        ]))->assertSessionHasNoErrors();
+
+        $evento = Evento::latest('id')->first();
+        $this->assertEquals((float) config('fisei.nota_minima_defecto', 7.0), (float) $evento->nota_minima);
+        $this->assertEquals((float) config('fisei.asistencia_minima_defecto', 70.0), (float) $evento->asistencia_minima);
+    }
 }

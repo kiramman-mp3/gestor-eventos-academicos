@@ -1,16 +1,17 @@
 @use('App\Models\Configuracion')
 
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="description" content="{{ Configuracion::valor('eslogan') ?? 'Sistema web para la gestión de cursos, congresos y eventos académicos de la FISEI - UTA.' }}">
     <title>{{ $title ? $title.' · ' : '' }}{{ Configuracion::valor('nombre_sitio') }}</title>
     <link rel="icon" href="{{ Configuracion::imagenUrl('favicon') }}">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="flex min-h-screen flex-col overflow-x-clip bg-white font-sans text-tinta antialiased">
+<body class="flex min-h-screen flex-col overflow-x-clip bg-zinc-50/60 font-sans text-tinta antialiased">
     <x-aviso />
     <x-navigation />
 

@@ -1,4 +1,13 @@
 <x-app-layout :title="$evento->nombre">
+    <div class="mb-5 flex items-center gap-2 text-xs font-semibold text-zinc-500">
+        <a href="{{ route('eventos.index') }}" class="hover:text-uta-600 transition flex items-center gap-1">
+            <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+            Catálogo de eventos
+        </a>
+        <span class="text-zinc-300">/</span>
+        <span class="text-zinc-800 truncate max-w-md">{{ $evento->nombre }}</span>
+    </div>
+
     <div class="grid gap-8 lg:grid-cols-3">
         <article class="lg:col-span-2">
             <div class="card overflow-hidden">

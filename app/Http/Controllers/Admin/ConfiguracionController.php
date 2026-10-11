@@ -84,6 +84,7 @@ class ConfiguracionController extends Controller
     public function limpiarCache(): RedirectResponse
     {
         Cache::flush();
+        Cache::forget('estadisticas_espacio_almacenamiento');
         Artisan::call('view:clear');
 
         return back()->with('status', 'Caché del sistema limpiada.');
@@ -91,15 +92,17 @@ class ConfiguracionController extends Controller
 
     private function espacioUsado(): string
     {
-        $bytes = 0;
+        return Cache::remember('estadisticas_espacio_almacenamiento', now()->addHours(6), function () {
+            $bytes = 0;
 
-        foreach (['public', 'local'] as $disco) {
-            $storage = Storage::disk($disco);
-            foreach ($storage->allFiles() as $archivo) {
-                $bytes += $storage->size($archivo);
+            foreach (['public', 'local'] as $disco) {
+                $storage = Storage::disk($disco);
+                foreach ($storage->allFiles() as $archivo) {
+                    $bytes += $storage->size($archivo);
+                }
             }
-        }
 
-        return number_format($bytes / 1024 / 1024, 1).' MB';
+            return number_format($bytes / 1024 / 1024, 1).' MB';
+        });
     }
 }
