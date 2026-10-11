@@ -93,6 +93,10 @@ Route::middleware(['auth', 'verified', 'role:administrador'])
             ->only(['index', 'store', 'update', 'destroy'])
             ->parameters(['tipos-evento' => 'tipoEvento']);
 
+        Route::resource('contenidos', Admin\ContenidoController::class)->only(['index', 'store', 'update', 'destroy']);
+        Route::get('/configuracion', [Admin\ConfiguracionController::class, 'edit'])->name('configuracion.edit');
+        Route::put('/configuracion', [Admin\ConfiguracionController::class, 'update'])->name('configuracion.update');
+
         Route::get('/comprobantes', [Admin\ComprobanteController::class, 'index'])->name('comprobantes.index');
         Route::post('/comprobantes/{comprobante}/aprobar', [Admin\ComprobanteController::class, 'aprobar'])->name('comprobantes.aprobar');
         Route::post('/comprobantes/{comprobante}/rechazar', [Admin\ComprobanteController::class, 'rechazar'])->name('comprobantes.rechazar');
